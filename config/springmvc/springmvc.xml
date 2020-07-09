@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util-3.2.xsd
+        http://www.springframework.org/schema/task">
+
+    <!--只需要扫描包中的Controller 注解-->
+    <context:component-scan base-package="com.hang.programmer.controller" use-default-filters="false">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!--启动 mvc 注解驱动-->
+    <mvc:annotation-driven></mvc:annotation-driven>
+
+    <!--启动定时任务  ??有问题 -->
+    <!-- 500
+    org.xml.sax.SAXParseException;
+    lineNumber: 28; columnNumber: 30; cvc-complex-type.2.4.c:
+    通配符的匹配很全面, 但无法找到元素 'task:annotation-driven' 的声明。
+    -->
+
+     <!-- <task:annotation-driven/>-->
+
+    <!--静态资源处理-->
+    <mvc:default-servlet-handler/>
+
+    <!-- 视图解析器 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!-- 前缀 -->
+        <property value="/WEB-INF/views/" name="prefix"/>
+        <!-- 后缀 -->
+        <property value=".jsp" name="suffix"/>
+    </bean>
+
+    <!--文件上传  ?? 有问题-->
+    <!-- 500
+    java.lang.ClassNotFoundException: org.apache.commons.fileupload.FileItemFactory
+    -->
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!--上传文件大小限制-->
+        <property name="maxUploadSize">
+            <value>10485760</value>
+        </property>
+
+        <!--请求的编码格式，和jsp页面一致-->
+        <property name="defaultEncoding">
+            <value>UTF-8</value>
+        </property>
+    </bean>
+
+    <!--后台反复问拦截器-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/system/login"/>
+            <mvc:exclude-mapping path="/system/get_cpacha"/>
+            <mvc:exclude-mapping path="/h-ui/**"/>
+            <mvc:exclude-mapping path="/easyui/**"/>
+            <bean class="com.hang.programmer.interceptor.LogonInterceptor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <!-- 校验器 -->
+    <bean id="validator"
+          class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <!-- hibernate校验器-->
+        <property name="providerClass" value="org.hibernate.validator.HibernateValidator" />
+        <!-- 指定校验使用的资源文件，在文件中配置校验错误信息，如果不指定则默认使用classpath下的UserValidationMessage.properties -->
+        <property name="validationMessageSource" ref="messageSource" />
+    </bean>
+
+    <!-- 校验错误信息配置文件 -->
+    <bean id="messageSource"
+          class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <!-- 资源文件名-->
+        <property name="basenames" value="ValidationMessage"/>
+        <!-- 资源文件编码格式 -->
+        <property name="fileEncodings" value="utf-8" />
+        <!-- 对资源文件内容缓存时间，单位秒 -->
+        <property name="cacheSeconds" value="120" />
+    </bean>
+</beans>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hang.programmer.dao.StudentDao">
+   <!-- <select id="findList" parameterType="Student" resultType="Student">
+        select
+        s.id as "id",
+        s.name as "name",
+        s.clazzId as "clazzId",
+        s.stuNum as "stuNum",
+        s.sex as "sex",
+        s.age as "age",
+        s.passWord as "passWord",
+        s.remark as "remark",
+        c.name as "clazzName"
+        from student s
+        left join clazz c
+        ON s.`clazzId`=c.`id`
+        where
+        1=1
+        <if test="name != null" >
+            and s.name like #{name}
+        </if>
+        <if test="clazzId != 0">
+           and s.clazzId = #{clazzId}
+        </if>
+         limit #{page.offset},#{page.rows}
+    </select>-->
+    <select id="findByName" parameterType="String" resultType="Student">
+        select * from student where Name = #{userName}
+    </select>
+    <select id="findList" parameterType="Map" resultType="Student">
+        select s.id as "id",
+        s.name as "userName",
+        s.clazzId as "clazzId",
+        s.stuNum as "stuNum",
+        s.sex as "sex",
+        s.age as "age",
+        s.photo as "photo",
+        s.passWord as "passWord",
+        s.remark as "remark",
+        c.name as "clazzName"
+        from student s
+        left join clazz c
+        ON s.`clazzId`=c.`id`
+        where 1=1
+        <if test="userName != null" >
+            and s.name like #{userName}
+        </if>
+        <if test="clazzId != null">
+            and s.clazzId = #{clazzId}
+        </if>
+        limit #{offset},#{pageSize}
+    </select>
+    <select id="findAll" resultType="Student">
+        select * from student
+    </select>
+
+    <select id="getToTal" parameterType="Map" resultType="Integer">
+        select count(id) from student where 1=1
+        <if test="userName != null" >
+          and  name like #{userName}
+        </if>
+        <if test="clazzId != null">
+           and clazzId = #{clazzId}
+        </if>
+    </select>
+
+    <insert id="add" parameterType="Student" >
+        insert into student (id, name,clazzId,age,sex,stuNum,passWord,photo, remark) values (null ,#{userName}, #{clazzId},#{age},#{sex},#{stuNum},#{passWord},#{photo}, #{remark})
+    </insert>
+
+    <update id="edit" parameterType="Student">
+        update student set name = #{userName}, clazzId = #{clazzId},age=#{age},sex=#{sex},stuNum=#{stuNum},passWord=#{passWord,},photo = #{photo}, remark = #{remark} where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="String">
+        delete from student where id in(${value})
+    </delete>
+</mapper>

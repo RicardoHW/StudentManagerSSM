@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!-- 起别名 -->
+    <!--<typeAliases>
+        &lt;!&ndash; 批量起别名
+             对该包下所有类起别名，别名是当前实体类的类名，首字母大写小写都可以。
+        &ndash;&gt;
+        <package name="com.hang.programmer.pojo"/>
+    </typeAliases>-->
+<!--
+    &lt;!&ndash; 加载映射文件 &ndash;&gt;
+    <mappers>
+        &lt;!&ndash; mapper标签的属性
+            resource属性：映射文件的类路径
+            url属性：  映射文件的网络路径
+            class属性： mapper接口的类路径
+                使用class属性时mapper接口和mapper映射文件名称必须相同，而且在同一目录下
+         &ndash;&gt;
+
+        &lt;!&ndash; 批量加载映射文件
+                使用package标签
+                name属性为：mapper接口所在包的名称
+                框架会自动加载该包下所有的xxxMapper.xml文件
+                前提：要遵循规范
+                mapper接口和mapper映射文件名称必须相同，而且在同一目录下
+                还有mapper接口定义的4个规范。
+         &ndash;&gt;
+        <package name="com.hang.programmer.mapper"/>
+
+    </mappers>-->
+</configuration>

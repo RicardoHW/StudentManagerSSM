@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_studentmanager" default="compile.module.studentmanager">
+  <dirname property="module.studentmanager.basedir" file="${ant.file.module_studentmanager}"/>
+  
+  <property name="module.jdk.home.studentmanager" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.studentmanager" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.studentmanager" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.studentmanager" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="studentmanager.output.dir" value="${module.studentmanager.basedir}/out/production/StudentManager"/>
+  <property name="studentmanager.testoutput.dir" value="${module.studentmanager.basedir}/out/test/StudentManager"/>
+  
+  <path id="studentmanager.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="studentmanager.module.production.classpath">
+    <path refid="${module.jdk.classpath.studentmanager}"/>
+    <path refid="library.tomcat_7.0.59.classpath"/>
+    <fileset dir="${basedir}/web/WEB-INF/lib">
+      <patternset refid="library.patterns"/>
+    </fileset>
+  </path>
+  
+  <path id="studentmanager.runtime.production.module.classpath">
+    <pathelement location="${studentmanager.output.dir}"/>
+    <fileset dir="${basedir}/web/WEB-INF/lib">
+      <patternset refid="library.patterns"/>
+    </fileset>
+  </path>
+  
+  <path id="studentmanager.module.classpath">
+    <path refid="${module.jdk.classpath.studentmanager}"/>
+    <pathelement location="${studentmanager.output.dir}"/>
+    <path refid="library.tomcat_7.0.59.classpath"/>
+    <fileset dir="${basedir}/web/WEB-INF/lib">
+      <patternset refid="library.patterns"/>
+    </fileset>
+  </path>
+  
+  <path id="studentmanager.runtime.module.classpath">
+    <pathelement location="${studentmanager.testoutput.dir}"/>
+    <pathelement location="${studentmanager.output.dir}"/>
+    <path refid="library.tomcat_7.0.59.classpath"/>
+    <fileset dir="${basedir}/web/WEB-INF/lib">
+      <patternset refid="library.patterns"/>
+    </fileset>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.studentmanager">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.studentmanager">
+    <patternset refid="excluded.from.module.studentmanager"/>
+  </patternset>
+  
+  <path id="studentmanager.module.sourcepath">
+    <dirset dir="${module.studentmanager.basedir}">
+      <include name="src"/>
+      <include name="config"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.studentmanager" depends="compile.module.studentmanager.production,compile.module.studentmanager.tests" description="Compile module StudentManager"/>
+  
+  <target name="compile.module.studentmanager.production" depends="register.custom.compilers" description="Compile module StudentManager; production classes">
+    <mkdir dir="${studentmanager.output.dir}"/>
+    <javac2 destdir="${studentmanager.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.studentmanager}/javac">
+      <compilerarg line="${compiler.args.studentmanager}"/>
+      <bootclasspath refid="studentmanager.module.bootclasspath"/>
+      <classpath refid="studentmanager.module.production.classpath"/>
+      <src refid="studentmanager.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.studentmanager"/>
+    </javac2>
+    
+    <copy todir="${studentmanager.output.dir}">
+      <fileset dir="${module.studentmanager.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.studentmanager.basedir}/config">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.studentmanager.tests" depends="register.custom.compilers,compile.module.studentmanager.production" description="compile module StudentManager; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.studentmanager" description="cleanup module">
+    <delete dir="${studentmanager.output.dir}"/>
+    <delete dir="${studentmanager.testoutput.dir}"/>
+  </target>
+</project>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hang.programmer.dao.UserDao">
+    <select id="findByLoginName" parameterType="String" resultType="User">
+        select * from t_user where loginName = #{loginName}
+    </select>
+    <select id="login" resultType="User">
+        select * from t_user where loginName = #{loginName} and passWord = #{passWord}
+    </select>
+
+    <select id="findList" parameterType="Map" resultType="User">
+        select * from t_user where loginName like #{loginName} limit #{offset},#{pageSize}
+    </select>
+
+    <select id="getToTal" parameterType="Map" resultType="Integer">
+        select count(id) from t_user where loginName like #{loginName}
+    </select>
+
+    <insert id="add" parameterType="User" >
+        insert into t_user (id, loginName, passWord,userName) values (null ,#{loginName} , #{passWord}, #{userName})
+    </insert>
+
+    <update id="edit" parameterType="User">
+        update t_user set loginName = #{loginName},passWord = #{passWord},userName =  #{userName} where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="String">
+        delete from t_user where id in(${value})
+    </delete>
+</mapper>
